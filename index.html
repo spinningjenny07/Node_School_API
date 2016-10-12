@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>School API</title>
+	<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+</head>
+<body>
+	<div>
+		<div id="grades"></div>
+		<button id="checkgrades">Check Grades</button>
+	</div>
+
+	<div>
+		<div id="schedule"></div>
+		<button id="checkschedule">Check Schedule</button>
+	</div>
+
+	<div>
+		<input id="addclass" name="">
+		<button id="sendaddclass">Add Class</button>
+	</div>
+
+	<div>
+		<input id="submitHW" name="">
+		<button id="sendsubmitHW">Submit Homework</button>
+	</div>
+
+	<div>
+		<div id="allHW"></div>
+		<button id="checkallHW">Check All Homework</button>
+	</div>
+
+	<div>
+		<div id="classHW"></div>
+		<button id="checkclassHW">Check Class Homework</button>
+	</div>
+
+
+	<script>
+
+		function checkGrades() {
+			$.get("/grades", function(response) {
+				console.log(response);
+				$('#grades').text(response);
+			});
+		}
+
+		$("#checkgrades").click(function(){
+			checkGrades();
+		});
+
+
+		function checkSchedule() {
+			$.get("/schedule", function(response) {
+				console.log(response);
+				$('#schedule').text(response);
+			});
+		}
+
+		$("#checkschedule").click(function(){
+			checkSchedule();
+		});
+
+		function sendAddClass(classToCreate) {
+			$.post("/schedule", classToCreate, function(response) {
+			
+			});
+		}
+
+		$("#sendaddclass").click(function(){
+			sendAddClass($('#addclass').val());
+		});
+
+		function submitHW(homeworkToSubmit) {
+			$.post("/homework/", homeworkToSubmit, function(response) {
+				
+			});
+		}
+
+		$("#sendsubmitHW").click(function(){
+			submitHW($('#submitHW').val());
+		});
+
+		function checkAllHW() {
+			$.get("/homework/", function(response) {
+				$('#allHW').text(response);
+			});
+		}
+
+		$("#checkallHW").click(function(){
+			checkAllHW();
+		});
+
+		function checkClassHW() {
+			$.get("/homework/:class_name", function(response) {
+				$('#classHW').text(response);
+			});
+		}
+
+		$("#checkclassHW").click(function(){
+			checkClassHW();
+		});
+
+		
+
+		// $('#newfortune').click(getFortune);
+		
+	</script>
+
+</body>
+</html>
