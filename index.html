@@ -31,30 +31,37 @@
 	</div>
 
 	<div>
-		<div id="classHW"></div>
+		<input id="classHW"></div>
+		<div id="classHWstatus"></div>
 		<button id="checkclassHW">Check Class Homework</button>
 	</div>
 
 
 	<script>
-
+	// jslint esversion6 //
 		function checkGrades() {
+			$('#grades').text("");
 			$.get("/grades", function(response) {
-				console.log(response);
-				$('#grades').text(response);
+				response = JSON.parse(response);
+				for (var r in response) {
+					var line = (r + ":" + response[r].grade + "<br>");
+					$('#grades').append(line);
+				}
 			});
 		}
 
-		$("#checkgrades").click(function(){
-			checkGrades();
-		});
+		$("#checkgrades").click(checkGrades);
 
 
 		function checkSchedule() {
 			$.get("/schedule", function(response) {
-				console.log(response);
-				$('#schedule').text(response);
-			});
+				var arr = [];
+				for (var r in response) {
+					arr.push(r);
+				}
+				response = arr;
+				$('#schedule').text(JSON.stringify(response));
+			}, 'json');
 		}
 
 		$("#checkschedule").click(function(){
@@ -64,7 +71,7 @@
 		function sendAddClass(classToCreate) {
 			$.post("/schedule", classToCreate, function(response) {
 			
-			});
+			}, 'json');
 		}
 
 		$("#sendaddclass").click(function(){
@@ -74,16 +81,22 @@
 		function submitHW(homeworkToSubmit) {
 			$.post("/homework/", homeworkToSubmit, function(response) {
 				
-			});
+			}, 'json');
 		}
 
 		$("#sendsubmitHW").click(function(){
 			submitHW($('#submitHW').val());
+
 		});
 
 		function checkAllHW() {
 			$.get("/homework/", function(response) {
-				$('#allHW').text(response);
+				$('#allHW').text("");
+				response = JSON.parse(response);
+				for (var r in response) {
+					var line = (r + ":" + response[r].homework + "<br>");
+					$('#allHW').append(line);
+				}
 			});
 		}
 
@@ -91,14 +104,21 @@
 			checkAllHW();
 		});
 
-		function checkClassHW() {
-			$.get("/homework/:class_name", function(response) {
-				$('#classHW').text(response);
+		function checkClassHW(className) {
+
+			$.get("/homework/" + className, function(response) {
+				$('#classHWstatus').text("");
+				response = JSON.parse(response);
+				for (var r in response) {
+					var line = (response[r].homework);
+					$('classHWstatus').append(line);
+				}
+
 			});
 		}
 
 		$("#checkclassHW").click(function(){
-			checkClassHW();
+			checkClassHW($("#classHW").val());
 		});
 
 		

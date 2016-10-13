@@ -3,20 +3,25 @@
 var http = require("http");
 var fs = require("fs");
 
-var classes = {
-	english : {
-		grade: "B",
-		homework: false
-	},
-	programming : {
-		grade: "A+",
-		homework: true
-	},
-	//it's in quotes b/c it doesn't recognize it as a string since it's 2 words
-	"abstract algebra": {
+var classes = { 
+		english : {
+			grade: "B",
+			homework: false
+		},
+		programming : {
+			grade: "A+",
+			homework: true
+		},
+		biology: {
+			grade: "C-",
+			homework: true
+		}, 
+		art: {
+			grade: "A++",
+			homework: false
+		}
+	};	
 
-	}
-};
 
 var server = http.createServer((req, res) => {
     if (req.url === "/index.html" || req.url === "/"){
@@ -34,9 +39,7 @@ var server = http.createServer((req, res) => {
         if (req.method === "GET") {
             res.write(JSON.stringify(classes));
             res.end();
-        }
-    } else if(req.url === "/schedule") {
-    	if (req.method === "POST") {
+        } else if (req.method === "POST") {
     		var queryData = "";
 
             req.on('data', function(data) {
@@ -54,13 +57,16 @@ var server = http.createServer((req, res) => {
                 classes.push(queryData);
             });
         }
-    } else if(req.url === "/homework/") {
+
+     } else if(req.url === "/homework/") {
     	if (req.method === "GET") {
     		res.write(JSON.stringify(classes));
     		res.end();
     	}
-    } else if(req.url === "/homework/:class_name") {
+    } else if(req.url.substr (0, 10) === "/homework/") {
     	if (req.method === "GET") {
+    		var cls = req.url.split("/");
+    		console.log(cls);
     		res.write(JSON.stringify(classes));
     		res.end();
     	}
