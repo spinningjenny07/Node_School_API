@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>School API</title>
-	<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 </head>
 <body>
 	<div>
@@ -31,8 +31,8 @@
 	</div>
 
 	<div>
-		<input id="classHW"></div>
-		<div id="classHWstatus"></div>
+		<input id="classHW" name="">
+		<div id="classHWstatus">Check Homework</div>
 		<button id="checkclassHW">Check Class Homework</button>
 	</div>
 
@@ -111,9 +111,9 @@
 				response = JSON.parse(response);
 				for (var r in response) {
 					var line = (response[r].homework);
-					$('classHWstatus').append(line);
+					$('#classHWstatus').append(line);
+					console.log(line);
 				}
-
 			});
 		}
 

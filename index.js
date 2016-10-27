@@ -43,8 +43,9 @@ var server = http.createServer((req, res) => {
     		var queryData = "";
 
             req.on('data', function(data) {
+            	//every time data comes in, append that data to the existing data
                 queryData += data;
-                //if the user send more than a million bytes of data stop
+                //if the user sent more than a million bytes of data stop
                 if(queryData.length > 1e6) {
                     queryData = "";
                     //kill the connection and send back a 413 error
@@ -54,11 +55,17 @@ var server = http.createServer((req, res) => {
             });
 
             req.on('end', function() {
-                classes.push(queryData);
-            });
-        }
 
-     } else if(req.url === "/homework/") {
+            	classes[queryData] =
+               		{
+						grade: "B",
+						homework: false
+					};
+			});
+			res.end();
+		}
+
+	} else if(req.url === "/homework/") {
     	if (req.method === "GET") {
     		res.write(JSON.stringify(classes));
     		res.end();
@@ -66,17 +73,49 @@ var server = http.createServer((req, res) => {
     } else if(req.url.substr (0, 10) === "/homework/") {
     	if (req.method === "GET") {
     		var cls = req.url.split("/");
-    		console.log(cls);
-    		res.write(JSON.stringify(classes));
+    		cls = cls[cls.length -1];
+    		// console.log(classes[cls].homework);
+
+    		res.write(JSON.stringify(classes[cls].homework));
     		res.end();
-    	}
+    	} else if (req.method === "POST") {
+    		var queryData = "";
+
+            req.on('data', function(data) {
+            	//every time data comes in, append that data to the existing data
+                queryData += data;
+                //if the user sent more than a million bytes of data stop
+                if(queryData.length > 1e6) {
+                    queryData = "";
+                    //kill the connection and send back a 413 error
+                    res.writeHead(413, {'Content-Type': 'text/plain'}).end();
+                    req.connection.destroy();
+                }
+            });
+
+            req.on('end', function() {
+
+            	classes[queryData] =
+               		{
+						homework: false
+					};
+			});
+			console.log(queryData);
+			res.end();
+		}
+
+
     } else {
         res.write("This is Jenny's Server!");
         res.end();
     }
+
+
+// entire server function 
 });
 
 
 server.listen(8000, () => {
     console.log("Server started on port 8000");
 });
+
